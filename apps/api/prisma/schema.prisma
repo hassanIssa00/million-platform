@@ -1,0 +1,318 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String                    @id @default(uuid())
+  email            String                    @unique
+  password         String
+  role             Role                      @default(STUDENT)
+  createdAt        DateTime                  @default(now())
+  updatedAt        DateTime                  @updatedAt
+  avatar           String?
+  name             String?
+  phone            String?
+  behaviorScore    Float?                    @default(75)
+  emailVerified    Boolean                   @default(false)
+  firstName        String?
+  isActive         Boolean                   @default(true)
+  lastName         String?
+  assignments      Assignment[]
+  attendance       Attendance[]
+  taughtClasses    Class[]                   @relation("ClassTeacher")
+  classSessions    ClassSession[]
+  conversations    ConversationParticipant[]
+  enrollments      Enrollment[]
+  uploadedFiles    File[]                    @relation("UploadedFiles")
+  studentGrades    Grade[]
+  invoices         Invoice[]
+  createdLessons   Lesson[]
+  sentMessages     Message[]
+  messageReactions MessageReaction[]
+  millionProfile   MillionProfile?           @relation("MillionUser")
+  children         ParentStudent[]           @relation("ParentToStudent")
+  parents          ParentStudent[]           @relation("StudentToParent")
+  taughtSubjects   Subject[]                 @relation("SubjectTeacher")
+  submissions      Submission[]
+
+  @@index([role])
+  @@index([isActive])
+}
+
+model ParentStudent {
+  id        String @id @default(uuid())
+  parentId  String
+  studentId String
+  parent    User   @relation("ParentToStudent", fields: [parentId], references: [id])
+  student   User   @relation("StudentToParent", fields: [studentId], references: [id])
+
+  @@unique([parentId, studentId])
+}
+
+model Class {
+  id           String         @id @default(uuid())
+  name         String
+  description  String?
+  academicYear String?
+  teacherId    String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  attendance   Attendance[]
+  teacher      User?          @relation("ClassTeacher", fields: [teacherId], references: [id])
+  sessions     ClassSession[]
+  students     Enrollment[]
+  subjects     Subject[]
+}
+
+model Subject {
+  id          String       @id @default(uuid())
+  name        String
+  code        String?
+  description String?
+  classId     String
+  teacherId   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  assignments Assignment[]
+  grades      Grade[]
+  lessons     Lesson[]
+  class       Class        @relation(fields: [classId], references: [id])
+  teacher     User?        @relation("SubjectTeacher", fields: [teacherId], references: [id])
+}
+
+model Enrollment {
+  id         String   @id @default(uuid())
+  studentId  String
+  classId    String
+  enrolledAt DateTime @default(now())
+  class      Class    @relation(fields: [classId], references: [id])
+  student    User     @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, classId])
+  @@index([classId])
+}
+
+model Lesson {
+  id          String   @id @default(uuid())
+  title       String
+  content     String?
+  videoUrl    String?
+  attachments String[]
+  subjectId   String
+  authorId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  author      User     @relation(fields: [authorId], references: [id])
+  subject     Subject  @relation(fields: [subjectId], references: [id])
+}
+
+model Assignment {
+  id          String       @id @default(uuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  subjectId   String
+  teacherId   String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  attachments String[]
+  classId     String?
+  maxScore    Float        @default(100)
+  subject     Subject      @relation(fields: [subjectId], references: [id])
+  teacher     User         @relation(fields: [teacherId], references: [id])
+  submissions Submission[]
+}
+
+model Submission {
+  id           String     @id @default(uuid())
+  content      String?
+  submittedAt  DateTime   @default(now())
+  assignmentId String
+  studentId    String
+  attachments  String[]
+  feedback     String?
+  grade        Float?
+  gradedAt     DateTime?
+  score        Float?
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student      User       @relation(fields: [studentId], references: [id])
+
+  @@unique([assignmentId, studentId])
+  @@index([studentId])
+}
+
+model Grade {
+  id        String   @id @default(uuid())
+  score     Float
+  studentId String
+  comments  String?
+  createdAt DateTime @default(now())
+  grade     Float
+  maxScore  Float    @default(100)
+  subjectId String
+  updatedAt DateTime @updatedAt
+  student   User     @relation(fields: [studentId], references: [id])
+  subject   Subject  @relation(fields: [subjectId], references: [id])
+}
+
+model Attendance {
+  id        String           @id @default(uuid())
+  date      DateTime
+  status    AttendanceStatus
+  studentId String
+  createdAt DateTime         @default(now())
+  classId   String
+  notes     String?
+  updatedAt DateTime         @updatedAt
+  class     Class            @relation(fields: [classId], references: [id])
+  student   User             @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, classId, date])
+  @@index([classId, date])
+  @@index([studentId])
+}
+
+model Invoice {
+  id          String   @id @default(uuid())
+  studentId   String
+  amount      Float
+  currency    String   @default("USD")
+  status      String
+  stripeId    String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  student     User     @relation(fields: [studentId], references: [id])
+
+  @@index([studentId])
+  @@index([status])
+}
+
+model File {
+  id           String   @id @default(uuid())
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  url          String
+  uploadedById String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  uploadedBy   User     @relation("UploadedFiles", fields: [uploadedById], references: [id])
+}
+
+model MillionProfile {
+  id           String         @id @default(cuid())
+  userId       String         @unique
+  displayName  String?
+  currentLevel String?
+  totalPoints  Float          @default(0)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  user         User           @relation("MillionUser", fields: [userId], references: [id])
+  scores       MillionScore[]
+
+  @@map("MillionProfile")
+}
+
+model MillionScore {
+  id            String         @id @default(cuid())
+  profileId     String
+  date          DateTime       @default(now())
+  attendance    Float          @default(0)
+  assignments   Float          @default(0)
+  exams         Float          @default(0)
+  participation Float          @default(0)
+  total         Float          @default(0)
+  profile       MillionProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+  @@index([date])
+  @@map("MillionScore")
+}
+
+model Conversation {
+  id           String                    @id @default(uuid())
+  type         String                    @default("direct")
+  title        String?
+  description  String?
+  avatarUrl    String?
+  classId      String?
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+  participants ConversationParticipant[]
+  messages     Message[]
+}
+
+model ConversationParticipant {
+  id             String       @id @default(uuid())
+  conversationId String
+  userId         String
+  role           String       @default("member")
+  lastReadAt     DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@unique([conversationId, userId])
+}
+
+model Message {
+  id             String            @id @default(uuid())
+  conversationId String
+  senderId       String
+  content        String
+  type           String            @default("text")
+  attachments    String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  conversation   Conversation      @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User              @relation(fields: [senderId], references: [id])
+  reactions      MessageReaction[]
+
+  @@index([conversationId, createdAt])
+}
+
+model MessageReaction {
+  id        String  @id @default(uuid())
+  messageId String
+  userId    String
+  emoji     String
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id])
+
+  @@unique([messageId, userId, emoji])
+}
+
+model ClassSession {
+  id         String   @id @default(uuid())
+  title      String
+  classId    String
+  teacherId  String
+  startTime  DateTime
+  duration   Int
+  isActive   Boolean  @default(false)
+  meetingUrl String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  class      Class    @relation(fields: [classId], references: [id])
+  teacher    User     @relation(fields: [teacherId], references: [id])
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  PARENT
+  ADMIN
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}

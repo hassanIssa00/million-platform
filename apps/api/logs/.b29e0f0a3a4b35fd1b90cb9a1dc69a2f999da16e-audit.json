@@ -1,0 +1,30 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "C:\\Users\\hassa\\Desktop\\anti\\million-platform\\apps\\api\\logs\\.b29e0f0a3a4b35fd1b90cb9a1dc69a2f999da16e-audit.json",
+    "files": [
+        {
+            "date": 1767737065067,
+            "name": "C:\\Users\\hassa\\Desktop\\anti\\million-platform\\apps\\api\\logs\\exceptions-2026-01-07.log",
+            "hash": "223382b1c4138453acd6eb166952e5d10dfec51b90d9028f9195d4c4b6541e9a"
+        },
+        {
+            "date": 1769481754149,
+            "name": "C:\\Users\\hassa\\Desktop\\anti\\million-platform\\apps\\api\\logs\\exceptions-2026-01-27.log",
+            "hash": "53e47931f46a365fa885e75b773877f93ecaf4216c8ad9a9b83e24321bde9c39"
+        },
+        {
+            "date": 1769775318880,
+            "name": "C:\\Users\\hassa\\Desktop\\anti\\million-platform\\apps\\api\\logs\\exceptions-2026-01-30.log",
+            "hash": "a868a31f56c79cbb601dbd9f36d8e80fdf93eaa01991cf1301db47164720dc64"
+        },
+        {
+            "date": 1769880752083,
+            "name": "C:\\Users\\hassa\\Desktop\\anti\\million-platform\\apps\\api\\logs\\exceptions-2026-01-31.log",
+            "hash": "8c38d1f3075daeea8458f128e1fe8e0878bf0d2b5579c50bb54cede8f04b2466"
+        }
+    ],
+    "hashType": "sha256"
+}

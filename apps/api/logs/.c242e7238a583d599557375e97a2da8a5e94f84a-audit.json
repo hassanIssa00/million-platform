@@ -1,0 +1,30 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "C:\\Users\\hassa\\Desktop\\anti\\million-platform\\apps\\api\\logs\\.c242e7238a583d599557375e97a2da8a5e94f84a-audit.json",
+    "files": [
+        {
+            "date": 1767737065071,
+            "name": "C:\\Users\\hassa\\Desktop\\anti\\million-platform\\apps\\api\\logs\\rejections-2026-01-07.log",
+            "hash": "5b5b9b6967392dcd8a68ab9f63e3f5f731b89cd661084b553f72c51039cf62c6"
+        },
+        {
+            "date": 1769481754151,
+            "name": "C:\\Users\\hassa\\Desktop\\anti\\million-platform\\apps\\api\\logs\\rejections-2026-01-27.log",
+            "hash": "3abb9fde1b696f43d2393043c666655087ff4713990ecc785e1a6fbb269e2fcf"
+        },
+        {
+            "date": 1769775318882,
+            "name": "C:\\Users\\hassa\\Desktop\\anti\\million-platform\\apps\\api\\logs\\rejections-2026-01-30.log",
+            "hash": "58ea9261cfa43ecd72a9337c0ee0c23e9a4f3d42773e64fa75072422a21d2cd5"
+        },
+        {
+            "date": 1769880752085,
+            "name": "C:\\Users\\hassa\\Desktop\\anti\\million-platform\\apps\\api\\logs\\rejections-2026-01-31.log",
+            "hash": "10154b37bed41497cda50b304336cca944c1fbf94efba4a3fa598224c34d5817"
+        }
+    ],
+    "hashType": "sha256"
+}

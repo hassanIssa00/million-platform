@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        working-directory: apps/api
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/million_db"
+          DIRECT_URL: "postgresql://postgres:postgres@localhost:5432/million_db"
+
+      - name: Lint
+        run: npm run lint
+        
+      # - name: Run Tests
+      #   run: npm run test
+
+      - name: Build API
+        run: npm run build --workspace=api
+
+      - name: Build Web
+        run: npm run build --workspace=web
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+          # Add mock env vars for build if needed by Next.js
+          NEXT_PUBLIC_API_URL: http://localhost:4000
