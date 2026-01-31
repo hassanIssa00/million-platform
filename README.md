@@ -8,7 +8,7 @@ Million Platform is a comprehensive solution for modern education, tailored for 
 
 ## 🌐 Live Demo & Repository
 
-- **GitHub Repository**: [https://github.com/your-username/million-platform](https://github.com/your-username/million-platform)
+- **GitHub Repository**: [https://github.com/hassanIssa00/million-platform](https://github.com/hassanIssa00/million-platform)
 - **Live Platform**: [https://million-platform-web.vercel.app](https://million-platform-web.vercel.app)
 - **API Documentation**: [https://api-million-platform.railway.app/docs](https://api-million-platform.railway.app/docs)
 
@@ -55,7 +55,7 @@ Million Platform is a comprehensive solution for modern education, tailored for 
 
 1.  **Clone the repository**
     ```bash
-    git clone https://github.com/your-username/million-platform.git
+    git clone https://github.com/hassanIssa00/million-platform.git
     cd million-platform
     ```
 
